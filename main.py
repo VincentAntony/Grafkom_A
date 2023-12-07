@@ -6,21 +6,19 @@ import math
 import time
 import numpy as np
 
-gameoverposition=1000 # ei variable diye game over lekhar position control hobe. car crash korle etar value 0 hoye jabe ar game over lekha show korbe
+gameoverposition=1000 
 slowness=.08
-crash=False # For detecting car crashed or not
-middleline_y=300 # ei variable diyei road er midlle line gula control hobe. Basically eta middle line er bottom point.
-centerx=247 # center of car
-#Round object parameters
-objx=[] # object gular center x
+crash=False 
+middleline_y=300 
+centerx=247 
+objx=[] 
 objy=[600,750,750,900,1050,1050,1200,1200,1500,1650,1650,1800]
 objradius=[]
 
 
-for x in range(12): # randomly object er lane assign kortesi. Apatoto 12 ta object nicchi at a time.
+for x in range(12): 
      objx.append(random.choice([247-65,247,247+65]))
-     objradius.append(12) #initial radius 12 set kortesi
-# Square object paramater
+     objradius.append(12) 
 temp=random.choice([247-65,247,247+65])
 
 sqcenterx=temp
@@ -36,7 +34,6 @@ y4=sqcentery+15
 
 score=0
 
-#for drawing circle objects
 def objcirc():
  global objy
  global objx
@@ -47,13 +44,11 @@ def objcirc():
      cinc(objx[i], objy[i], objradius[i])
      i+=1
 
-#For drawing square object
 def objsquare():
  global x1,y1,x2,y2,x3,y3,x4,y4
  mqda(x1,y1,x2,y2,x3,y3,x4,y4)
 
-#square er point gula ke given degree angle e rotate kore dibe
-def rotatedeg(degree): # quad er 4 ta point ke given degree angle e rotate kore dibe
+def rotatedeg(degree): 
  global x1,y1,x2,y2,x3,y3,x4,y4,sqcentery,sqcenterx
  a = math.cos(math.radians(degree))
  b = math.sin(math.radians(degree))
@@ -93,9 +88,7 @@ def rotatedeg(degree): # quad er 4 ta point ke given degree angle e rotate kore 
  x4 = temp[0][0]
  y4 = temp[1][0]
 
-#For Drawing middle lines of the road
-def middlelines(y): # y er moddhe middleline_y pass hocche.
-# proti column e middleilne_y er sapekkhe 3 ta line separet line thakbe.
+def middlelines(y):
  glColor3f(1, 1, 1)
  mldamedium(215, y, 215, y+200)
  mldamedium(215, y-100, 215, y-300 )
@@ -104,90 +97,79 @@ def middlelines(y): # y er moddhe middleline_y pass hocche.
  mldamedium(280, y - 100, 280, y - 300)
  mldamedium(280, y + 300, 280, y + 500)
 
-#Drawing point 2
 def draw_points(x, y):
- glPointSize(2) #pixel size. by default 1 thake
+ glPointSize(2) 
  glBegin(GL_POINTS)
- glVertex2f(x,y) #jekhane show korbe pixel
+ glVertex2f(x,y) 
  glEnd()
 
-#Drawing point 10
 def draw_pointsmedium(x, y):
- glPointSize(10) #pixel size. by default 1 thake
+ glPointSize(10) 
  glBegin(GL_POINTS)
- glVertex2f(x,y) #jekhane show korbe pixel
+ glVertex2f(x,y) 
  glEnd()
 
-#Drawing point 30
+
 def draw_pointsbig(x, y):
- glPointSize(30) #pixel size. by default 1 thake
+ glPointSize(30) 
  glBegin(GL_POINTS)
- glVertex2f(x,y) #jekhane show korbe pixel
+ glVertex2f(x,y) 
  glEnd()
 
-#MLDA (Line) 2
-def FindZoneAndCvtTo0(x1,y1,x2,y2): #Algoritm=> diff>0 hole x,y swap. ar x,y er modhe je je  negative tader -1 diye multiply
- res=[] # x1,y1,x2,y2,zone eita return korbe
+def FindZoneAndCvtTo0(x1,y1,x2,y2): 
+ res=[]
  dx = x2 - x1
  dy = y2 - y1
  diff=abs(dx)-abs(dy)
- if diff>=0: #No Swap
-     if (dx>=0): #dx positive
-         #Zone 0
-         if dy>=0: #dy positive
+ if diff>=0:
+     if (dx>=0): 
+         if dy>=0: 
              res.append(x1)
              res.append(y1)
              res.append(x2)
              res.append(y2)
              res.append(0)
-         # Zone 7
-         else: #dy negative
+         else: 
              res.append(x1)
              res.append(y1*(-1))
              res.append(x2)
              res.append(y2*(-1))
              res.append(7)
-     else: #dx negative
-         # Zone 3
-         if dy >= 0:  # dy positive
+     else:
+         if dy >= 0: 
              res.append(x1*(-1))
              res.append(y1)
              res.append(x2*(-1))
              res.append(y2)
              res.append(3)
-         # Zone 4
-         else:  # dy negative
+         else: 
              res.append(x1*(-1))
              res.append(y1*(-1))
              res.append(x2*(-1))
              res.append(y2*(-1))
              res.append(4)
- else: #diff<0 #Swap lagbe
-     if (dx >= 0):  # dx positive
-         # Zone 1
-         if dy >= 0:  # dy positive
+ else: 
+     if (dx >= 0):  
+         if dy >= 0:
              res.append(y1)
              res.append(x1)
              res.append(y2)
              res.append(x2)
              res.append(1)
-         # Zone 6
-         else:  # dy negative
+         else:  
              res.append(y1*(-1))
              res.append(x1)
              res.append(y2*(-1))
              res.append(x2)
              res.append(6)
-     else:  # dx negative
-         # Zone 2
-         if dy >= 0:  # dy positive
+     else: 
+         if dy >= 0:  
              res.append(y1)
              res.append(x1*(-1))
              res.append(y2)
              res.append(x2*(-1))
              res.append(2)
-        # Zone 5
-         else:  # dy negative
+         else:  
              res.append(y1*(-1))
              res.append(x1*(-1))
              res.append(y2*(-1))
@@ -222,14 +204,12 @@ def Cvt0ToX(x,y,zone):
      res.append(y*(-1))
  return res
 def mlda(x1,y1,x2,y2):
- #converting to zone 0
  temp=FindZoneAndCvtTo0(x1,y1,x2,y2)
  x1=temp[0]
  y1=temp[1]
  x2=temp[2]
  y2=temp[3]
  prezone=temp[4]
- #Applying Mlda
  dx=x2-x1
  dy=y2-y1
  dE=2*dy
@@ -239,28 +219,23 @@ def mlda(x1,y1,x2,y2):
  x=x1
  y=y1
  while(x<x2):
-     #Converting the point back to orginal zone and drawing it.
      tp=Cvt0ToX(x,y,prezone)
      draw_points(tp[0],tp[1])
-     #Updating pixel
-     if(d>0):#choose NE
+     if(d>0):
          x+=1
          y+=1
-         d=d+dNE  #updating d
-     else: # choose E
+         d=d+dNE
+     else:
          x+=1
-         d=d+dE # updating d
+         d=d+dE 
 
-#MLDA (Line) 10
 def mldamedium(x1,y1,x2,y2):
- #converting to zone 0
  temp=FindZoneAndCvtTo0(x1,y1,x2,y2)
  x1=temp[0]
  y1=temp[1]
  x2=temp[2]
  y2=temp[3]
  prezone=temp[4]
- #Applying Mlda
  dx=x2-x1
  dy=y2-y1
  dE=2*dy
@@ -270,27 +245,22 @@ def mldamedium(x1,y1,x2,y2):
  x=x1
  y=y1
  while(x<x2):
-    #Converting the point back to orginal zone and drawing it.
      tp=Cvt0ToX(x,y,prezone)
      draw_pointsmedium(tp[0],tp[1])
-     #Updating pixel
-     if(d>0):#choose NE
+     if(d>0):
          x+=1
          y+=1
-         d=d+dNE  #updating d
-     else: # choose E
+         d=d+dNE  
+     else:
          x+=1
-         d=d+dE # updating d
-#MLDA (Line) 30
+         d=d+dE
 def mldabig(x1,y1,x2,y2):
- #converting to zone 0
  temp=FindZoneAndCvtTo0(x1,y1,x2,y2)
  x1=temp[0]
  y1=temp[1]
  x2=temp[2]
  y2=temp[3]
  prezone=temp[4]
- #Applying Mlda
  dx=x2-x1
  dy=y2-y1
  dE=2*dy
@@ -300,41 +270,33 @@ def mldabig(x1,y1,x2,y2):
  x=x1
  y=y1
  while(x<x2):
-     #Converting the point back to orginal zone and drawing it.
      tp=Cvt0ToX(x,y,prezone)
      draw_pointsbig(tp[0],tp[1])
- #Updating pixel
-     if(d>0):#choose NE
+     if(d>0):
          x+=1
          y+=1
-         d=d+dNE  #updating d
-     else: # choose E
+         d=d+dNE  
+     else: 
          x+=1
-         d=d+dE # updating d
+         d=d+dE 
 
-#MCDA (Circle)
 def mcda(centerX,centerY,r):
- #print(centerX)
- d=1-r # d initialize
-
- # initially x =0 ar y =radius
+ d=1-r
  x=0
  y=r
- while(y>=x): # jotokhon zone 1 e thakbe
-     draw_circle_points(x,y,centerX,centerY) #point ta sob zone e draw korbe.
-   #Updating pixel
-     if(d>=0):#choose SE
+ while(y>=x): 
+     draw_circle_points(x,y,centerX,centerY) 
+     if(d>=0):
          d=d+2*x-2*y+5
          x += 1
          y -= 1
-     else: # choose E
+     else:
          d=d+2*x+3
          x += 1
 def draw_circle_points(x,y,centerX,centerY):
- for i in range(8): # i mean zone 0 to 7
-
-     temp=Cvt1ToX(x,y,i) #i th zone er jonno 8 way sym diye point ber kore temp e store kortesi. temp[0]=>x ,temp[1]=>y
-     draw_points(temp[0]+centerX,temp[1]+centerY) # point er sathe center jog kore draw kore dicchi.
+ for i in range(8): 
+     temp=Cvt1ToX(x,y,i) 
+     draw_points(temp[0]+centerX,temp[1]+centerY) 
 def Cvt1ToX(x,y,zone):
  res=[]
  if(zone==0):
@@ -362,32 +324,31 @@ def Cvt1ToX(x,y,zone):
      res.append(y)
      res.append(x*(-1))
  return res
-#MQDA (Quad)
+     
 def mqda(x1,y1,x2,y2,x3,y3,x4,y4):
  mldamedium(x1,y1,x2,y2)
  mldamedium(x2, y2, x3, y3)
  mldamedium(x3, y3, x4, y4)
  mldamedium(x4, y4, x1, y1)
 
-#MQDA filled (filled Quad)
 def mqdafilled(x1,y1,x2,y2,x3,y3,x4,y4):
  # mlda(x1,y1,x2,y2)
  # mlda(x2, y2, x3, y3)
  # mlda(x3, y3, x4, y4)
  # mlda(x4, y4, x1, y1)
- for x in range(x1,x2+1,25): #optimize er jonno skip kortesi.
+ for x in range(x1,x2+1,25): 
      mldabig(x,y1,x,y4)
  # for y in range(y1,y4+1):
  #     mlda(x1,y,x2,y)
 
-#MQDA filled (filled Quad)
+
 def mqdafilledSmall(x1,y1,x2,y2,x3,y3,x4,y4):
  # mlda(x1,y1,x2,y2)
  # mlda(x2, y2, x3, y3)
  # mlda(x3, y3, x4, y4)
  # mlda(x4, y4, x1, y1)
 
- for x in range(x1,x2+1): #optimize er jonno skip kortesi.
+ for x in range(x1,x2+1):
      mlda(x,y1,x,y4)
 
  # for y in range(y1,y4+1): #eta use korle slow hoye jay. so alternatively drawpoint er size baraye diyechi.
