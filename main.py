@@ -481,3 +481,202 @@ def scoredisplay(b=0):
         drawnum(x,y,i,10,10)
         x+=30
 
+def game_over():
+    glColor3f(.5, .5, 1)
+    global gameoverposition
+    #G
+    x,y=10-gameoverposition,350-gameoverposition-50
+    for i in range(5):
+        mlda(x,y,x+100,y)
+        mlda(x,y,x,y+100)
+        mlda(x,y+100,x+100,y+100)
+        mlda(x+100,y,x+100,y+50)
+        mlda(x+100,y+50,x+50,y+50)
+        x+=1
+        y+=1
+    #A
+    x,y=135-gameoverposition,350-gameoverposition-50
+    for i in range(5):
+        mlda(x,y,x+50,y+100)
+        mlda(x+50,y+100,x+100,y)
+        mlda(x+25,y+50,x+75,y+50)
+        x += 1
+        y += 1
+    #M
+    x,y=260-gameoverposition,350-gameoverposition-50
+    for i in range(5):
+        mlda(x,y,x+25,y+100)
+        mlda(x+25,y+100,x+50,y+50)
+        mlda(x+50,y+50,x+75,y+100)
+        mlda(x+75,y+100,x+100,y)
+        x += 1
+        y += 1
+    #E
+    x,y=375-gameoverposition,350-gameoverposition-50
+    for i in range(5):
+        mlda(x,y,x,y+100)
+        mlda(x,y,x+100,y)
+        mlda(x,y+50,x+100,y+50)
+        mlda(x,y+100,x+100,y+100)
+        x += 1
+        y += 1
+    #O
+    x,y=10-gameoverposition,225-gameoverposition-50
+    for i in range(5):
+        mlda(x,y,x,y+100)
+        mlda(x, y+100, x+100, y+100)
+        mlda(x+100, y+100, x+100, y)
+        mlda(x+100, y, x, y)
+        x += 1
+        y += 1
+    #V
+    x,y=135-gameoverposition,225-gameoverposition-50
+    for i in range(5):
+        mlda(x,y+100,x+50,y)
+        mlda(x+50, y, x+100, y+100)
+        x += 1
+        y += 1
+    #E
+    x, y = 260-gameoverposition, 225-gameoverposition-50
+    for i in range(5):
+        mlda(x, y, x, y + 100)
+        mlda(x, y, x + 100, y)
+        mlda(x, y + 50, x + 100, y + 50)
+        mlda(x, y + 100, x + 100, y + 100)
+        x += 1
+        y += 1
+    #R
+    x, y = 375-gameoverposition, 225-gameoverposition-50
+    for i in range(5):
+        mlda(x, y, x, y + 100)
+        mlda(x+100, y+100, x + 100, y+50)
+        mlda(x, y + 50, x + 100, y + 50)
+        mlda(x, y + 100, x + 100, y + 100)
+        mlda(x,y+50,x+100,y)
+        x += 1
+        y += 1
+
+def idle():
+  global crash
+  if crash==False: 
+     global slowness
+     time.sleep(slowness) 
+     if slowness>0.0002:
+         slowness -= .0001
+     global middleline_y
+     if middleline_y >0 :  
+         middleline_y -= 20
+     else:
+         middleline_y=300
+          
+     global objy
+     i=0
+     for x in range(len(objy)):
+         if objy[i]>0: 
+             objy[i]-=10
+             if 100<objy[i]<=500:
+                 objradius[i]=objradius[i]+.15
+         else:
+             objy[i] = 1350 
+             objx[i]=random.choice([247-65,247,247+65])
+             objradius[i]=12
+         i+=1
+   
+     global x1,x2,x3,x4,y1,y2,y3,y4,sqcentery,sqcenterx
+     if sqcentery>0: 
+         y1-=10 
+         y2-=10
+         y3 -= 10
+         y4 -= 10
+         sqcentery-=10
+         rotatedeg(10) 
+     else: 
+         sqcenterx = random.choice([247 - 65, 247, 247 + 65])
+         sqcentery = 1350
+         x1 = sqcenterx - 15
+         x2 = sqcenterx + 15
+         x3 = sqcenterx + 15
+         x4 = sqcenterx - 15
+         y1 = sqcentery - 15
+         y2 = sqcentery - 15
+         y3 = sqcentery + 15
+         y4 = sqcentery + 15
+
+     global centerx,gameoverposition
+
+     for i in range(len(objy)):
+         if objx[i]==centerx and  0<objy[i]<117: 
+             gameoverposition=0 
+             crash=True
+     global score
+
+     if sqcenterx == centerx and 0<sqcentery<117:
+         score+=50 
+         sqcenterx = random.choice([247 - 65, 247, 247 + 65])
+         sqcentery = max(objy)- 75 
+         x1 = sqcenterx - 15
+         x2 = sqcenterx + 15
+         x3 = sqcenterx + 15
+         x4 = sqcenterx - 15
+         y1 = sqcentery - 15
+         y2 = sqcentery - 15
+         y3 = sqcentery + 15
+         y4 = sqcentery + 15
+     score+=1 
+  else: 
+      gameoverposition=0
+  glutPostRedisplay()
+def buttons(key,x,y):
+ global centerx
+ if key == b'a' and centerx>185: 
+     centerx -= 65
+ if key == b'd'and centerx<310: 
+     centerx += 65
+ glutPostRedisplay()
+     
+def iterate():
+ glViewport(0, 0, 500, 500)
+ glMatrixMode(GL_PROJECTION)
+ glLoadIdentity()
+ glOrtho(0.0, 500, 0.0, 500, 0.0, 1.0)
+ glMatrixMode (GL_MODELVIEW)
+ glLoadIdentity()
+
+def showScreen():
+     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+     glLoadIdentity()
+     iterate()
+     # background (Green)
+     glColor3f(0, 1, 0)
+     mqdafilled(0,0,140,0,140,500,0,500)
+     mqdafilled(360, 0, 500, 0, 500, 500, 360, 500)
+     #Road
+     glColor3f(.52, .52, .491)
+     mqdafilled(150, 0, 350,0, 350, 500, 150, 500)
+     #Road Side border
+     glColor3f(0.949, 0.949, 0.494)
+     mqdafilled(140, 0, 150, 0, 150, 500, 140, 500)
+     mqdafilled(350, 0, 360, 0, 360, 500, 350, 500)
+     #Road middle lines
+     middlelines(middleline_y)
+     #car
+     global centerx
+     glColor3f(0.49, 0.949, 0.994)
+     car(centerx)
+     objcirc()
+     objsquare()
+     # showing score
+     global score
+     scoredisplay(score)
+     game_over() 
+     glutSwapBuffers()
+     
+glutInit()
+glutInitDisplayMode(GLUT_RGBA)
+glutInitWindowSize(500, 500)
+glutInitWindowPosition(500, 100)
+wind = glutCreateWindow(b"OpenGL Game BrickCar") 
+glutDisplayFunc(showScreen)
+glutIdleFunc(idle)
+glutKeyboardFunc(buttons)
+glutMainLoop()
