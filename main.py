@@ -481,38 +481,3 @@ def scoredisplay(b=0):
         drawnum(x,y,i,10,10)
         x+=30
 
-def game_over():
-    glColor3f(.5, .5, 1)
-
-    global gameoverposition
-
- 
-    x,y=10-gameoverposition,350-gameoverposition-50
-    for i in range(5):
-
-        mlda(x,y,x+100,y)
-        mlda(x,y,x,y+100)
-        mlda(x,y+100,x+100,y+100)
-        mlda(x+100,y,x+100,y+50)
-        mlda(x+100,y+50,x+50,y+50)
-        x+=1
-        y+=1
-
-    x,y=135-gameoverposition,350-gameoverposition-50
-    for i in range(5):
-        mlda(x,y,x+50,y+100)
-        mlda(x+50,y+100,x+100,y)
-        mlda(x+25,y+50,x+75,y+50)
-        x += 1
-        y += 1
-
-    x,y=260-gameoverposition,350-gameoverposition-50
-    for i in range(5):
-        mlda(x,y,x+25,y+100)
-        mlda(x+25,y+100,x+50,y+50)
-        mlda(x+50,y+50,x+75,y+100)
-        mlda(x+75,y+100,x+100,y)
-        x += 1
-        y += 1
-    
-
